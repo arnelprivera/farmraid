@@ -120,3 +120,44 @@ footer a{text-decoration:none}footer a:hover{color:#fff;text-decoration:underlin
 .play{animation:pulse 1.6s steps(2) infinite}
 @keyframes pulse{50%{background:var(--pri)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* extra animations */
+#prog{position:absolute;left:0;bottom:0;height:4px;width:0;background:var(--leaf)}
+nav .wrap{transition:height .25s}nav.scrolled .wrap{height:54px}nav.scrolled .links{top:54px}
+.links a:not(.btn){background:linear-gradient(var(--leaf),var(--leaf)) 0 100%/0 3px no-repeat;transition:background-size .25s,color .2s;padding-bottom:3px}
+.links a:not(.btn):hover{background-size:100% 3px}
+.links .btn{animation:glow 2.4s steps(2) infinite}
+@keyframes glow{50%{box-shadow:4px 4px 0 var(--pri),0 0 0 4px rgba(120,185,107,.45)}}
+section h2::after{content:"";display:block;height:6px;width:0;background:var(--pri);margin-top:10px;transition:width .8s steps(8) .3s}
+.dark h2::after,.forest h2::after{background:var(--leaf)}
+.seen h2::after{width:72px}
+#contact h2::after{margin-inline:auto}
+.card .sp svg,.char .sp svg{animation:idle 3s steps(2) infinite}
+.card:nth-child(2n) .sp svg{animation-delay:-1s}.card:nth-child(3n) .sp svg{animation-delay:-2s}
+@keyframes idle{50%{transform:translateY(-3px)}}
+.raid{animation:alert 2.2s steps(2) infinite}
+@keyframes alert{50%{border-color:#C0443A}}
+.steps li:hover::before{animation:hop .4s steps(3)}
+.steps li{transition:transform .15s}.steps li:hover{transform:translateX(6px)}
+.shot{transition:transform .15s,border-color .15s}.shot:hover{transform:rotate(-1.5deg) scale(1.03)}
+details[open] p{animation:rise .35s both}
+.swap .card{animation:rise .4s both}
+.card:hover .ph{animation:hop .5s steps(3)}
+.bubble::after{content:"";display:inline-block;width:8px;height:1em;background:var(--dark);margin-left:3px;vertical-align:-2px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* intro screen */
+#intro{position:fixed;inset:0;z-index:100;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;color:var(--light);padding:20px;cursor:pointer;transition:transform .8s steps(8)}
+#intro.out{transform:translateY(-100%)}
+body.lock{overflow:hidden}
+.it{font:700 clamp(2.6rem,10vw,5rem) var(--px);color:var(--leaf);text-shadow:4px 4px 0 var(--pri);animation:drop .8s steps(8) both}
+#intro p{margin:0;animation:rise .7s .4s both}
+#introsp{animation:grow 1.2s steps(6) both;transform-origin:50% 100%}
+@keyframes grow{from{transform:scale(.1)}to{transform:none}}
+.load{width:min(280px,70vw);height:20px;border:3px solid var(--leaf);padding:2px}
+.load b{display:block;height:100%;background:var(--leaf);width:0;animation:fill 1.8s steps(14) .3s forwards}
+@keyframes fill{to{width:100%}}
+#enter{opacity:0;animation:show .1s 2.2s forwards}
+@keyframes show{to{opacity:1}}
+body:not(.ready) .hero h1,body:not(.ready) .hero .tag,body:not(.ready) .hero p,body:not(.ready) .hero .ctas,body:not(.ready) .screen{animation:none}
+@media(prefers-reduced-motion:reduce){#enter{opacity:1}.load b{width:100%}}
