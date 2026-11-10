@@ -1,48 +1,163 @@
-const PAL={g:'#78B96B',G:'#287A45',d:'#0B291D',r:'#C0443A',y:'#E6C65A',o:'#B8742A',b:'#8A5A33',w:'#F5F8F1',s:'#E8B98A'};
-const SP={
-sprout:["...gg...","..gggg..",".gg.gg..","...G....","...G....","...b....","bbbbbbbb","bbbbbbbb"],
-bug:["..d..d..","...dd...",".rrrrrr.","rrdrrdrr","rrrrrrrr","rdrrrrdr",".rrrrrr.","..d..d.."],
-barn:["...rr...","..rrrr..",".rrrrrr.","rrrrrrrr",".wwwwww.",".wbbbbw.",".wbbbbw.",".wbbbbw."],
-bag:["..bbbb..","...bb...","..bbbb..",".bbbbbb.","bbbyybbb","bbbbbbbb","bbbbbbbb",".bbbbbb."],
-coin:["..yyyy..",".yyooyy.","yyoyyoyy","yyoyyoyy","yyoyyoyy","yyoooyyy",".yyyyyy.","..yyyy.."],
-cup:["yyyyyyyy","y.yyyy.y","y.yyyy.y",".yyyyyy.","..yyyy..","...yy...","..oooo..",".oooooo."],
-book:["bbbbbbbb","bwwwwwwb","bwddddwb","bwwwwwwb","bwddddwb","bwwwwwwb","bbbbbbbb","........"],
-farmer:["...rrrr...","..rrrrrr..",".rrrrrrrr.","..ssssss..","..sdssds..","..ssssss..","...ssss...",".GGGGGGGG.","sGGGGGGGGs",".GGGGGGGG.","..bb..bb..","..dd..dd.."],
-manong:["....oo....","..oyyyyo..",".oyyyyyyo.","oooooooooo","..ssssss..","..sdssds..","..sddddds.","...ssss...",".GGGGGGGG.","sGGwGGwGGs",".GGGGGGGG.","..bb..bb.."]};
-function rects(k,ox=0,oy=0){let o='';SP[k].forEach((r,y)=>[...r].forEach((c,x)=>{if(c!='.')o+=`<rect x="${x+ox}" y="${y+oy}" width="1.02" height="1.02" fill="${PAL[c]}"/>`}));return o}
-function svg(k,w,h){return `<svg viewBox="0 0 ${w||8} ${h||8}" shape-rendering="crispEdges" aria-hidden="true">${rects(k)}</svg>`}
-document.querySelectorAll('i[data-sp]').forEach(e=>{const s=+e.dataset.s||56,w=+e.dataset.w||8,h=SP[e.dataset.sp].length;e.innerHTML=svg(e.dataset.sp,w,h);e.style.cssText=`display:inline-block;width:${s}px;height:${s*h/w}px;line-height:0`;});
-// hero scene
-(function(){const f=document.getElementById('crops');let o='';[[78,0],[86,0],[94,0]].forEach(([y])=>{for(let x=8;x<150;x+=12)o+=`<rect x="${x}" y="${y-6}" width="2" height="6"/><rect x="${x-2}" y="${y-8}" width="3" height="3"/><rect x="${x+2}" y="${y-9}" width="3" height="3"/>`});f.innerHTML=o;
-document.getElementById('bugslot').innerHTML=`<svg x="4" y="88" width="9" height="9" viewBox="0 0 8 8">${rects('bug')}</svg>`;
-document.getElementById('farmerslot').innerHTML=`<svg x="96" y="76" width="16" height="20" viewBox="0 0 10 12">${rects('farmer')}</svg>`})();
-// features
-const F=[['sprout','Farming system','Plant, water, grow and harvest different crops.'],['bug','Pest Raid system','Protect crops from pests that threaten farm productivity.'],['barn','Farm management','Expand land, construct buildings and manage resources.'],['bag','Inventory system','Organize seeds, tools, harvested crops and supplies.'],['coin','In-game shop','Purchase farming necessities and useful equipment.'],['cup','Milestone system','Complete objectives and unlock achievements.'],['book','Farm encyclopedia','Discover information about crops, pests and farming.'],['manong','AI farmer assistant','Ask Manong for farming advice and guidance.']];
-document.getElementById('featgrid').innerHTML=F.map(([k,t,d])=>`<div class="card"><span class="sp">${svg(k,k=='manong'?10:8,k=='manong'?12:8)}</span><h3>${t}</h3><p>${d}</p></div>`).join('');
-// gallery (replace src with real screenshot paths)
-const G=[['Farming gameplay',''],['Crop planting and harvesting',''],['Pest Raid encounters',''],['Inventory interface',''],['Farm construction',''],['Game environment',''],['Character designs','']];
-document.getElementById('gal').innerHTML=G.map(([t,src],i)=>`<button class="shot" data-i="${i}" aria-label="Preview ${t}" style="font-family:inherit">${src?`<img src="${src}" alt="${t}" loading="lazy">`:`${t}<small>Screenshot coming soon</small>`}</button>`).join('');
-const dlg=document.getElementById('dlg'),body=document.getElementById('dlgbody');
-function openShot(t,src,msg){body.innerHTML=`<h3>${t}</h3><div class="shot">${src?`<img src="${src}" alt="${t}">`:`<span>${t}</span><small>${msg||'Screenshot coming soon'}</small>`}</div>`;dlg.showModal()}
-document.getElementById('gal').onclick=e=>{const b=e.target.closest('.shot');if(b){const g=G[b.dataset.i];openShot(g[0],g[1])}};
-document.querySelector('.play').onclick=e=>{const[t,m]=e.currentTarget.dataset.shot.split('|');openShot(t,'',m)};
-document.getElementById('dlgclose').onclick=()=>dlg.close();dlg.onclick=e=>{if(e.target===dlg)dlg.close()};
-// knowledge
-const K={'Crops':[['Tomato','Plant seedlings in full sun, stake them and water at the base.','About 60 to 85 days after transplanting'],['Corn','Sow in blocks so wind can pollinate. Needs rich soil and steady water.','About 90 to 110 days'],['Rice','Grows in flooded or very wet fields. Keep water level steady.','About 100 to 130 days'],['Eggplant','Likes warm weather. Transplant seedlings and feed regularly.','About 60 to 80 days after transplanting']],
-'Pests':[['Aphids','Tiny sap-suckers that cluster on new growth and curl leaves.','Prevent: spray with water or soapy water; encourage ladybugs'],['Armyworms','Caterpillars that chew leaves, often at night.','Prevent: check leaves early and handpick'],['Rice bugs','Suck milk from developing rice grains, leaving them empty.','Prevent: weed field edges and plant on the same schedule as neighbors'],['Stem borers','Larvae tunnel into stems, causing dead shoots.','Prevent: remove stubble after harvest and rotate crops']],
-'Sustainable':[['Compost','Turn kitchen scraps and leaves into free, rich soil food.','Cuts waste and fertilizer costs'],['Mulch','A layer of straw or leaves keeps soil moist and weeds down.','Saves water'],['Crop rotation','Change what you plant in each plot each season.','Breaks pest and disease cycles'],['Companion planting','Grow herbs and flowers beside crops to attract helpful insects.','Reduces pesticide need']]};
-const tabs=document.getElementById('tabs'),kg=document.getElementById('kgrid');
-function showK(n){[...tabs.children].forEach(b=>b.setAttribute('aria-selected',b.textContent==n));kg.innerHTML=K[n].map(([t,d,m])=>`<div class="card"><h3>${t}</h3><p>${d}</p><div class="meta">${m}</div></div>`).join('')}
-Object.keys(K).forEach(n=>{const b=document.createElement('button');b.textContent=n;b.setAttribute('role','tab');b.onclick=()=>showK(n);tabs.append(b)});showK('Crops');
-// team
-document.getElementById('teamgrid').innerHTML=['Project Lead','Game Developer','Pixel Artist','Researcher'].map((r,i)=>`<div class="card"><div class="ph">${'ABCD'[i]}</div><h3>Team member name</h3><p>${r}</p></div>`).join('');
-// faq
-const Q=[['What is FARMRAID?','A pixel-art farming simulation where you grow crops and defend them from pest raids.'],['Is FARMRAID free to play?','Pricing has not been announced yet. Check this page for updates.'],['What is the main objective?','Build a thriving farm: plant, harvest, protect your crops and complete milestones.'],['How does the Pest Raid system work?','Pests can attack your fields at any time. Identify them, pick the right defense and save your harvest.'],['Who is Manong?','A friendly Filipino farmer-inspired AI assistant who gives planting tips, pest identification and prevention advice.'],['Is FARMRAID educational?','Yes. The game and its Farm Encyclopedia teach real crop, pest and sustainable farming basics.'],['What devices support the game?','Supported devices will be listed here at release.']];
-document.getElementById('faqs').innerHTML=Q.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join('');
-// nav + form
-const burger=document.getElementById('burger'),links=document.getElementById('links');
-burger.onclick=()=>{const o=links.classList.toggle('open');burger.setAttribute('aria-expanded',o)};
-links.onclick=e=>{if(e.target.tagName=='A'){links.classList.remove('open');burger.setAttribute('aria-expanded',false)}};
-document.documentElement.classList.add('js');
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const el=e.target;el.classList.add('in');io.unobserve(el);setTimeout(()=>{el.classList.remove('rv','in');el.style.transitionDelay=''},1300)}}),{threshold:.12});
-document.querySelectorAll('.card,.pillar,.raid,.char,.shot,.steps li,details,section h2,.tabs').forEach((el,i)=>{el.classList.add('rv');el.style.transitionDelay=(i%4)*90+'ms';io.observe(el)});
+:root{--forest:#123D2A;--dark:#0B291D;--pri:#287A45;--leaf:#78B96B;--light:#C6E6B5;--off:#F5F8F1;--px:'Pixelify Sans','Courier New',monospace;--bd:'Nunito',system-ui,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--off);color:var(--dark);font:400 1.05rem/1.65 var(--bd)}
+img,svg{max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--px);line-height:1.15;margin:0 0 .5em}
+h2{font-size:clamp(1.8rem,4vw,2.6rem)}
+.wrap{width:min(1120px,92%);margin:auto}
+section{padding:84px 0}
+.dark{background:var(--dark);color:var(--off)}.forest{background:var(--forest);color:var(--off)}.light{background:var(--light)}
+.lead{max-width:62ch}
+.btn{display:inline-block;font:700 1.05rem var(--px);text-decoration:none;padding:12px 22px;border:3px solid var(--dark);background:var(--leaf);color:var(--dark);box-shadow:4px 4px 0 var(--dark);cursor:pointer;transition:transform .1s,box-shadow .1s}
+.btn:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--dark)}
+.btn.alt{background:transparent;color:var(--off);border-color:var(--leaf);box-shadow:4px 4px 0 var(--pri)}
+:focus-visible{outline:3px solid #fff;outline-offset:3px}
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:var(--dark);border-bottom:4px solid var(--pri);padding-top:env(safe-area-inset-top,0px)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font:700 1.6rem var(--px);text-decoration:none;color:var(--off);display:flex;align-items:center;gap:8px}
+.logo span{color:var(--leaf)}
+.links{display:flex;gap:18px;align-items:center;list-style:none;margin:0;padding:0}
+.links a{color:var(--light);text-decoration:none;font-weight:600;font-size:.95rem}
+.links a:hover{color:#fff}
+.links .btn{padding:7px 14px;font-size:.95rem;color:var(--dark)}
+#burger{display:none;background:none;border:3px solid var(--leaf);color:var(--leaf);font:700 1rem var(--px);padding:6px 12px;cursor:pointer}
+@media(max-width:960px){#burger{display:block}.links{display:none;position:absolute;top:64px;left:0;right:0;background:var(--dark);flex-direction:column;padding:20px;border-bottom:4px solid var(--pri)}.links.open{display:flex}}
+/* hero */
+.hero{padding:56px 0 72px;background:var(--dark);position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(3rem,9vw,5.6rem);color:var(--leaf);text-shadow:4px 4px 0 var(--pri);margin:0 0 8px;letter-spacing:2px}
+.tag{font:700 clamp(1.1rem,2.4vw,1.5rem) var(--px);color:var(--light)}
+.hero p{color:var(--light);max-width:52ch}
+.ctas{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px}
+.screen{border:6px solid var(--leaf);box-shadow:8px 8px 0 var(--pri);background:var(--light);position:relative;line-height:0}
+.screen svg{width:100%;height:auto;image-rendering:pixelated}
+.play{position:absolute;right:12px;bottom:12px;line-height:1;font:700 .9rem var(--px);background:var(--dark);color:var(--off);border:3px solid var(--leaf);padding:8px 12px;cursor:pointer}
+.cloud{animation:drift 40s linear infinite}.cloud.b{animation-duration:60s;animation-delay:-20s}
+@keyframes drift{from{transform:translateX(-30px)}to{transform:translateX(190px)}}
+.bug{animation:crawl 9s steps(36) infinite}
+@keyframes crawl{from{transform:translateX(-20px)}to{transform:translateX(170px)}}
+/* grids */
+.grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:36px}
+.card{background:var(--off);border:3px solid var(--forest);box-shadow:5px 5px 0 var(--forest);padding:22px;transition:transform .12s}
+.card:hover{transform:translateY(-4px)}
+.card h3{font-size:1.25rem}
+.card p{margin:0}
+.dark .card,.forest .card{background:var(--forest);border-color:var(--leaf);box-shadow:5px 5px 0 var(--pri);color:var(--off)}
+.sp{display:block;width:56px;height:56px;margin-bottom:12px;image-rendering:pixelated}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+@media(max-width:820px){.hero .wrap,.two{grid-template-columns:1fr}section{padding:60px 0}}
+.pillar{border-left:6px solid var(--pri);padding-left:16px;margin:0 0 18px}
+.pillar b{font-family:var(--px);font-size:1.15rem}
+.raid{background:var(--dark);color:var(--light);padding:28px;border:4px solid var(--pri)}
+.raid h3{color:var(--leaf)}
+.raid ol{margin:0;padding-left:20px}
+/* characters */
+.char{display:flex;gap:22px;align-items:center;background:var(--dark);color:var(--off);padding:26px;border:4px solid var(--leaf)}
+.char .sp{width:110px;height:132px;margin:0;flex:none;background:var(--forest);padding:8px}
+.char ul{margin:.5em 0 0;padding-left:18px}
+.bubble{background:var(--off);color:var(--dark);padding:12px 16px;border:3px solid var(--dark);margin-top:14px;font-weight:600}
+@media(max-width:560px){.char{flex-direction:column;text-align:left}}
+/* gallery */
+.gal{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin-top:32px}
+.shot{aspect-ratio:16/10;border:4px solid var(--leaf);background:repeating-conic-gradient(var(--forest) 0 25%,var(--dark) 0 50%) 0 0/24px 24px;color:var(--light);font:700 1rem var(--px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding:10px;text-align:center}
+.shot small{font:600 .75rem var(--bd);opacity:.85}
+.shot:hover{border-color:#fff}
+.shot img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+dialog{border:6px solid var(--leaf);background:var(--dark);color:var(--off);width:min(760px,92vw);padding:20px}
+dialog::backdrop{background:rgba(11,41,29,.85)}
+dialog .shot{cursor:default;aspect-ratio:16/9}
+/* steps */
+.steps{list-style:none;counter-reset:s;padding:0;margin:36px 0 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.steps li{counter-increment:s;background:var(--off);border:3px solid var(--forest);padding:18px 18px 18px 70px;position:relative;font-weight:600}
+.steps li::before{content:counter(s);position:absolute;left:14px;top:14px;width:42px;height:42px;background:var(--pri);color:var(--off);font:700 1.4rem/42px var(--px);text-align:center}
+/* knowledge */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 0}
+.tabs button{font:700 1rem var(--px);padding:8px 16px;border:3px solid var(--forest);background:var(--off);color:var(--dark);cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--pri);color:var(--off)}
+.meta{font:700 .85rem var(--px);color:var(--pri);margin-top:8px}
+.note{font-size:.9rem;margin-top:22px;opacity:.85}
+/* team + faq + form */
+.ph{width:72px;height:72px;background:var(--leaf);border:3px solid var(--dark);margin-bottom:12px;display:grid;place-items:center;font:700 1.6rem var(--px);color:var(--dark)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chips span{background:var(--pri);color:var(--off);padding:3px 12px;font:600 .85rem var(--bd)}
+details{background:var(--off);border:3px solid var(--forest);margin-bottom:12px;color:var(--dark)}
+summary{padding:16px 20px;font:700 1.1rem var(--px);cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--pri)}details[open] summary::after{content:"–"}
+details p{margin:0;padding:0 20px 18px}
+form{display:grid;gap:14px}
+label{font-weight:800;font-size:.95rem}
+input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:3px solid var(--leaf);background:var(--off);color:var(--dark);margin-top:4px}
+#ok{display:none;background:var(--leaf);color:var(--dark);padding:12px;font-weight:800;border:3px solid var(--dark)}
+footer{background:var(--dark);color:var(--light);padding:56px 0 28px;border-top:6px solid var(--pri)}
+footer .grid{margin-top:0}
+footer ul{list-style:none;padding:0;margin:0}footer li{margin:6px 0}
+footer a{text-decoration:none}footer a:hover{color:#fff;text-decoration:underline}
+.copy{border-top:2px solid var(--forest);margin-top:32px;padding-top:18px;font-size:.9rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.js .rv{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+.js .rv.in{opacity:1;transform:none}
+.hero .wrap{position:relative;z-index:1}
+.hero h1{animation:drop .8s steps(8) both}
+.hero .tag{animation:rise .7s .3s both}.hero p:not(.tag){animation:rise .7s .5s both}.hero .ctas{animation:rise .7s .7s both}
+.screen{animation:pop .8s .3s backwards,float 5s 1.2s steps(6) infinite alternate}
+@keyframes drop{from{opacity:0;transform:translateY(-40px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes float{to{transform:translateY(-8px)}}
+#farmerslot{animation:bob 1.2s steps(2) infinite}
+@keyframes bob{50%{transform:translateY(-1px)}}
+#crops{animation:sway 3s steps(3) infinite alternate}
+@keyframes sway{to{transform:translateX(.8px)}}
+.logo i{animation:tilt 2s steps(2) infinite;transform-origin:50% 100%}
+@keyframes tilt{50%{transform:rotate(8deg)}}
+.card:hover .sp{animation:hop .5s steps(3)}
+@keyframes hop{50%{transform:translateY(-8px)}}
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;top:0;left:-60%;width:30%;height:100%;background:rgba(255,255,255,.45);transform:skewX(-20deg);transition:left .45s}
+.btn:hover::after{left:130%}
+.play{animation:pulse 1.6s steps(2) infinite}
+@keyframes pulse{50%{background:var(--pri)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* extra animations */
+#prog{position:absolute;left:0;bottom:0;height:4px;width:0;background:var(--leaf)}
+nav .wrap{transition:height .25s}nav.scrolled .wrap{height:54px}nav.scrolled .links{top:54px}
+.links a:not(.btn){background:linear-gradient(var(--leaf),var(--leaf)) 0 100%/0 3px no-repeat;transition:background-size .25s,color .2s;padding-bottom:3px}
+.links a:not(.btn):hover{background-size:100% 3px}
+.links .btn{animation:glow 2.4s steps(2) infinite}
+@keyframes glow{50%{box-shadow:4px 4px 0 var(--pri),0 0 0 4px rgba(120,185,107,.45)}}
+section h2::after{content:"";display:block;height:6px;width:0;background:var(--pri);margin-top:10px;transition:width .8s steps(8) .3s}
+.dark h2::after,.forest h2::after{background:var(--leaf)}
+.seen h2::after{width:72px}
+#contact h2::after{margin-inline:auto}
+.card .sp svg,.char .sp svg{animation:idle 3s steps(2) infinite}
+.card:nth-child(2n) .sp svg{animation-delay:-1s}.card:nth-child(3n) .sp svg{animation-delay:-2s}
+@keyframes idle{50%{transform:translateY(-3px)}}
+.raid{animation:alert 2.2s steps(2) infinite}
+@keyframes alert{50%{border-color:#C0443A}}
+.steps li:hover::before{animation:hop .4s steps(3)}
+.steps li{transition:transform .15s}.steps li:hover{transform:translateX(6px)}
+.shot{transition:transform .15s,border-color .15s}.shot:hover{transform:rotate(-1.5deg) scale(1.03)}
+details[open] p{animation:rise .35s both}
+.swap .card{animation:rise .4s both}
+.card:hover .ph{animation:hop .5s steps(3)}
+.bubble::after{content:"";display:inline-block;width:8px;height:1em;background:var(--dark);margin-left:3px;vertical-align:-2px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* intro screen */
+#intro{position:fixed;inset:0;z-index:100;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;color:var(--light);padding:20px;cursor:pointer;transition:transform .8s steps(8)}
+#intro.out{transform:translateY(-100%)}
+body.lock{overflow:hidden}
+.it{font:700 clamp(2.6rem,10vw,5rem) var(--px);color:var(--leaf);text-shadow:4px 4px 0 var(--pri);animation:drop .8s steps(8) both}
+#intro p{margin:0;animation:rise .7s .4s both}
+#introsp{animation:grow 1.2s steps(6) both;transform-origin:50% 100%}
+@keyframes grow{from{transform:scale(.1)}to{transform:none}}
+.load{width:min(280px,70vw);height:20px;border:3px solid var(--leaf);padding:2px}
+.load b{display:block;height:100%;background:var(--leaf);width:0;animation:fill 1.8s steps(14) .3s forwards}
+@keyframes fill{to{width:100%}}
+#enter{opacity:0;animation:show .1s 2.2s forwards}
+@keyframes show{to{opacity:1}}
+body:not(.ready) .hero h1,body:not(.ready) .hero .tag,body:not(.ready) .hero p,body:not(.ready) .hero .ctas,body:not(.ready) .screen{animation:none}
+@media(prefers-reduced-motion:reduce){#enter{opacity:1}.load b{width:100%}}
